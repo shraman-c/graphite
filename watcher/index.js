@@ -2,10 +2,10 @@
 'use strict';
 
 /**
- * Catalyst Watcher — Local-to-Cloud Note Sync
+ * Graphite Watcher — Local-to-Cloud Note Sync
  *
  * Monitors a local folder for .md/.txt file changes and syncs them
- * to the Catalyst dashboard automatically.
+ * to the Graphite dashboard automatically.
  *
  * Usage:
  *   node index.js                    # start watching (reads config.json)
@@ -139,7 +139,7 @@ async function runPairingFlow() {
   const serverUrl = opts.server || config.server_url || 'http://localhost:3001';
 
   console.log('\n╔════════════════════════════════════════╗');
-  console.log('║     CATALYST WATCHER — PAIRING FLOW   ║');
+  console.log('║     GRAPHITE WATCHER — PAIRING FLOW    ║');
   console.log('╚════════════════════════════════════════╝\n');
   console.log(`Server: ${serverUrl}\n`);
 
@@ -321,7 +321,7 @@ function printStatus(config) {
   const queueCount = getQueueCount.get().cnt;
 
   console.log('\n╔══════════════════════════════╗');
-  console.log('║  CATALYST WATCHER STATUS     ║');
+  console.log('║  GRAPHITE WATCHER STATUS     ║');
   console.log('╚══════════════════════════════╝\n');
   console.log(`Server:       ${config.server_url || '(not configured)'}`);
   console.log(`Paired:       ${config.device_token ? 'YES' : 'NO'}`);
@@ -366,7 +366,7 @@ async function main() {
   const folders = watches.map(w => w.folder);
 
   console.log('\n╔══════════════════════════════════════════════════╗');
-  console.log('║         CATALYST WATCHER — RUNNING               ║');
+  console.log('║         GRAPHITE WATCHER — RUNNING               ║');
   console.log('╚══════════════════════════════════════════════════╝\n');
   console.log(`Server: ${serverUrl}`);
   folders.forEach((folder, i) => {

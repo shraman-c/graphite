@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Flashcards Review - Catalyst',
+  title: 'Flashcards Review - Graphite',
   description: 'Review your active-recall flashcards using spaced repetition to reinforce your knowledge.',
 };
 

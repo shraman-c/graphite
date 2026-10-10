@@ -47,7 +47,7 @@ export default function HomeClient() {
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--base)', display: 'flex', flexDirection: 'column' }}>
       {/* Nav */}
       <nav className="nav-bar">
-        <span className="nav-logo">CATALYST</span>
+        <span className="nav-logo">GRAPHITE</span>
         <div className="flex gap-3 items-center" style={{ marginLeft: 'auto' }}>
           {mode !== 'login' && (
             <button className="btn btn-ghost" onClick={() => { setMode('login'); setError(''); }}>
@@ -248,7 +248,7 @@ function LandingHero({ onGetStarted, onLogin }: { onGetStarted: () => void; onLo
         gap: '24px',
       }}>
         <div>
-          <p className="mono-tag">BETA — STAGE 1</p>
+          <p className="mono-tag">GRAPHITE — FROM RAW THOUGHTS TO CONNECTED GRAPHS</p>
         </div>
 
         <h1 className="text-display-xl" style={{ maxWidth: '800px', lineHeight: 1.05 }}>
@@ -258,7 +258,7 @@ function LandingHero({ onGetStarted, onLogin }: { onGetStarted: () => void; onLo
         </h1>
 
         <p className="text-body" style={{ maxWidth: '560px', opacity: 0.8, fontSize: '18px' }}>
-          Write in any editor. Save the file. Catalyst turns your raw notes into a knowledge graph
+          Write in any editor. Save the file. Graphite turns your raw notes into a knowledge graph
           and active-recall flashcards — no manual formatting, no card-writing, no separate step.
         </p>
 

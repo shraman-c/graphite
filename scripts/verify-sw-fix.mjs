@@ -10,9 +10,9 @@ async function check(label, url, expectOffline, opts = {}) {
     await p.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await p.waitForTimeout(opts.wait || 1500);
     const title = await p.evaluate(() => document.title);
-    // Offline page has unique title "Offline — Catalyst" and body text "YOU'RE OFFLINE."
+    // Offline page has unique title "Offline — Graphite" and body text "YOU'RE OFFLINE."
     // Normal pages never have "YOU'RE OFFLINE." in their body.
-    const isOffline = await p.evaluate(() => document.title === 'Offline — Catalyst');
+    const isOffline = await p.evaluate(() => document.title === 'Offline — Graphite');
     const ok = isOffline === expectOffline;
     if (ok) passed++; else {
       failed++;

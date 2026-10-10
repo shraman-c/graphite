@@ -1,41 +1,47 @@
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
-// Argon2id (prebuilt native binary, @node-rs/argon2) — kept external to
-// webpack via serverExternalPackages in next.config.js.
-import { hash as argon2Hash, verify as argon2Verify } from '@node-rs/argon2';
+// Argon2id via hash-wasm (pure WASM — runs on Cloudflare Workers / Edge).
+import { argon2id, argon2Verify } from 'hash-wasm';
 import { queryOne, execute, executeStrict, generateId, initializeSchema, ensureDeviceMigrations } from './db';
 import type { SessionUser } from './types';
 
 const secretStr = process.env.NEXTAUTH_SECRET;
-if (!secretStr) {
-  throw new Error(
-    'NEXTAUTH_SECRET environment variable is required. ' +
-    'Generate one with: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))" ' +
-    'and add it to .env.local'
-  );
+
+function getSecret(): Uint8Array {
+  if (!secretStr) {
+    throw new Error(
+      'NEXTAUTH_SECRET environment variable is required. ' +
+      'Generate one with: node -e "console.log(require(\'crypto\').randomBytes(32).toString(\'hex\'))" ' +
+      'and add it to .env.local'
+    );
+  }
+  return new TextEncoder().encode(secretStr);
 }
-const SECRET = new TextEncoder().encode(secretStr);
 
 // Dual-key verification (audit 1.7 / fix 3.2): during a secret rotation window,
 // set NEXTAUTH_SECRET_PREVIOUS to the old value so existing sessions still
 // verify while new sessions are signed with the current secret. Remove the
 // previous value once all old JWTs have expired.
-const previousSecretStr = process.env.NEXTAUTH_SECRET_PREVIOUS;
-const VERIFY_SECRETS: Uint8Array[] = previousSecretStr
-  ? [SECRET, new TextEncoder().encode(previousSecretStr)]
-  : [SECRET];
+function getVerifySecrets(): Uint8Array[] {
+  const previousSecretStr = process.env.NEXTAUTH_SECRET_PREVIOUS;
+  const secrets = [getSecret()];
+  if (previousSecretStr) {
+    secrets.push(new TextEncoder().encode(previousSecretStr));
+  }
+  return secrets;
+}
 
-export const COOKIE_NAME_EXPORT = 'catalyst_session';
+export const COOKIE_NAME_EXPORT = 'graphite_session';
 
 // Use a global flag so HMR doesn't reset the flag mid-request,
 // but a real server restart (new process) always runs migrations.
 declare global {
   // eslint-disable-next-line no-var
-  var __catalystSchemaInit: boolean | undefined;
+  var __graphiteSchemaInit: boolean | undefined;
 }
 
 export async function ensureSchema() {
-  if (global.__catalystSchemaInit) return;
+  if (global.__graphiteSchemaInit) return;
   // One cheap catalog probe instead of the ~30-statement initializeSchema()
   // DDL sweep. On serverless (Vercel) every cold instance used to run the full
   // DDL on its first request — multi-second latency on login AND on every data
@@ -50,11 +56,11 @@ export async function ensureSchema() {
     // Existing DB: run only the additive column backfills (Part 3), never the
     // full DDL sweep — keeps the cold-start win while self-migrating.
     await ensureDeviceMigrations();
-    global.__catalystSchemaInit = true;
+    global.__graphiteSchemaInit = true;
     return;
   }
   await initializeSchema();
-  global.__catalystSchemaInit = true;
+  global.__graphiteSchemaInit = true;
 }
 
 const SESSION_DAYS = 30;
@@ -80,7 +86,7 @@ export async function createSession(user: SessionUser, meta?: SessionMeta): Prom
     .setJti(jti)
     .setIssuedAt()
     .setExpirationTime(`${SESSION_DAYS}d`)
-    .sign(SECRET);
+    .sign(getSecret());
 
   // Best-effort row insert. If the write fails the token still verifies but
   // has no backing row, so verifySession() will reject it — fail closed.
@@ -127,7 +133,7 @@ export async function verifySession(token: string): Promise<SessionUser | null> 
   await ensureSchema();
   let payload: any;
   try {
-    for (const secret of VERIFY_SECRETS) {
+    for (const secret of getVerifySecrets()) {
       try {
         const result = await jwtVerify(token, secret);
         payload = result.payload;
@@ -163,7 +169,7 @@ export async function verifySession(token: string): Promise<SessionUser | null> 
 export async function revokeSession(token: string): Promise<void> {
   try {
     let jti: string | undefined;
-    for (const secret of VERIFY_SECRETS) {
+    for (const secret of getVerifySecrets()) {
       try {
         const { payload } = await jwtVerify(token, secret);
         jti = payload.jti as string | undefined;
@@ -186,7 +192,7 @@ export async function revokeAllSessions(userId: string): Promise<void> {
 
 export async function getSession(): Promise<SessionUser | null> {
   const cookieStore = await cookies();
-  const token = cookieStore.get(COOKIE_NAME_EXPORT)?.value;
+  const token = cookieStore.get(COOKIE_NAME_EXPORT)?.value || cookieStore.get('catalyst_session')?.value;
   if (!token) return null;
   const user = await verifySession(token);
   if (!user) return null;
@@ -201,9 +207,9 @@ export async function getSession(): Promise<SessionUser | null> {
  */
 export async function getSessionJti(): Promise<string | null> {
   const cookieStore = await cookies();
-  const token = cookieStore.get(COOKIE_NAME_EXPORT)?.value;
+  const token = cookieStore.get(COOKIE_NAME_EXPORT)?.value || cookieStore.get('catalyst_session')?.value;
   if (!token) return null;
-  for (const secret of VERIFY_SECRETS) {
+  for (const secret of getVerifySecrets()) {
     try {
       const { payload } = await jwtVerify(token, secret);
       return (payload.jti as string) ?? null;
@@ -243,7 +249,10 @@ async function ensureUserRow(user: SessionUser): Promise<void> {
 }
 
 // Argon2id with OWASP-recommended parameters (memory 19 MiB, 2 iterations).
-const ARGON2_OPTIONS = { memoryCost: 19456, timeCost: 2, parallelism: 1 };
+const ARGON2_MEMORY = 19456;  // KiB
+const ARGON2_ITERATIONS = 2;
+const ARGON2_PARALLELISM = 1;
+const ARGON2_HASH_LENGTH = 32;
 
 /**
  * Hash a password with Argon2id. Output is a PHC-format string
@@ -251,7 +260,17 @@ const ARGON2_OPTIONS = { memoryCost: 19456, timeCost: 2, parallelism: 1 };
  * two hashes of the same password are never equal.
  */
 export async function hashPassword(password: string): Promise<string> {
-  return argon2Hash(password, ARGON2_OPTIONS);
+  const salt = new Uint8Array(16);
+  crypto.getRandomValues(salt);
+  return argon2id({
+    password,
+    salt,
+    iterations: ARGON2_ITERATIONS,
+    memorySize: ARGON2_MEMORY,
+    parallelism: ARGON2_PARALLELISM,
+    hashLength: ARGON2_HASH_LENGTH,
+    outputType: 'encoded',
+  });
 }
 
 /**
@@ -282,7 +301,7 @@ export async function verifyPassword(password: string, storedHash: string): Prom
     return verifyLegacySha256(password, storedHash);
   }
   try {
-    return await argon2Verify(storedHash, password);
+    return await argon2Verify({ hash: storedHash, password });
   } catch {
     // Malformed/unknown hash format (e.g. the sentinel) — never authenticates.
     return false;

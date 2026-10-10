@@ -26,7 +26,7 @@
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-const AUTH_SYNC_KEY = 'catalyst-auth-sync';
+const AUTH_SYNC_KEY = 'graphite-auth-sync';
 
 type AuthChange = 'login' | 'logout';
 

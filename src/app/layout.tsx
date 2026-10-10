@@ -5,15 +5,15 @@ import SessionSync from "@/components/SessionSync";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://catalyst-jet.vercel.app"),
-  title: "Catalyst — Turn Notes Into Knowledge",
+  title: "Graphite — From raw thoughts to connected graphs.",
   description:
-    "Catalyst automatically turns your raw local notes into an interconnected knowledge graph and active-recall flashcards. Write in any editor — we handle the structure.",
+    "Graphite automatically turns your raw local notes into an interconnected knowledge graph and active-recall flashcards. From raw thoughts to connected graphs.",
   keywords: ["notes", "flashcards", "knowledge graph", "spaced repetition", "studying"],
   openGraph: {
-    title: "Catalyst — Turn Notes Into Knowledge",
-    description: "Automatic knowledge graphs and flashcards from your raw notes.",
+    title: "Graphite — From raw thoughts to connected graphs.",
+    description: "From raw thoughts to connected graphs.",
     url: "https://catalyst-jet.vercel.app",
-    siteName: "Catalyst",
+    siteName: "Graphite",
     type: "website",
   },
 };
@@ -38,12 +38,12 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Catalyst" />
+        <meta name="apple-mobile-web-app-title" content="Graphite" />
         <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
             try {
-              var theme = localStorage.getItem('catalyst-theme');
+              var theme = localStorage.getItem('graphite-theme') || localStorage.getItem('catalyst-theme');
               if (theme === 'dark' || theme === 'light') {
                 document.documentElement.classList.add(theme);
                 document.documentElement.setAttribute('data-theme', theme);

@@ -1,11 +1,11 @@
-# Catalyst Watcher
+# Graphite Watcher
 
-A lightweight Node.js script that monitors a local folder for note changes and automatically syncs them to your Catalyst dashboard.
+A lightweight Node.js script that monitors a local folder for note changes and automatically syncs them to your Graphite dashboard.
 
 ## Prerequisites
 
 - Node.js 18+
-- A running Catalyst dashboard (default: `http://localhost:3001`)
+- A running Graphite dashboard (default: `http://localhost:3001`)
 
 ## Setup
 

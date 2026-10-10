@@ -1,4 +1,4 @@
-// Catalyst — Shared TypeScript types (mirrors DB schema)
+// Graphite — Shared TypeScript types (mirrors DB schema)
 
 export interface User {
   id: string;

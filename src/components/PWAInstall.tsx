@@ -106,17 +106,17 @@ export function PWAInstallCard() {
     >
       <img
         src="/icons/icon-192x192.png"
-        alt="Catalyst app icon"
+        alt="Graphite app icon"
         width={48}
         height={48}
         style={{ border: '3px solid var(--ink)', flexShrink: 0 }}
       />
       <div style={{ flex: '1 1 240px', minWidth: 0 }}>
         <h2 className="text-display-md" style={{ marginBottom: '4px' }}>
-          INSTALL CATALYST
+          INSTALL GRAPHITE
         </h2>
         <p className="text-body-sm" style={{ opacity: 0.85 }}>
-          Add Catalyst to your home screen for one-tap access to your notes, graphs, and
+          Add Graphite to your home screen for one-tap access to your notes, graphs, and
           flashcards — it opens in its own app window.
         </p>
       </div>
@@ -162,7 +162,7 @@ export function PWAInstallSection() {
     <div className="bento-tile">
       <h2 className="text-display-md" style={{ marginBottom: '6px' }}>INSTALL APP</h2>
       <p className="text-body-sm" style={{ opacity: 0.6, marginBottom: '16px' }}>
-        Run Catalyst from your home screen like a native app. Works offline-first and opens in
+        Run Graphite from your home screen like a native app. Works offline-first and opens in
         its own window.
       </p>
 
@@ -170,7 +170,7 @@ export function PWAInstallSection() {
         <div className="flex gap-2 items-center">
           <span className="mono-tag mono-tag-link">INSTALLED ✓</span>
           <span className="text-body-sm" style={{ opacity: 0.6 }}>
-            Catalyst is installed on this device.
+            Graphite is installed on this device.
           </span>
         </div>
       ) : canInstall ? (

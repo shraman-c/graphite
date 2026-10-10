@@ -1,5 +1,5 @@
 // ============================================================
-// Catalyst — PWA icon generator (no external dependencies)
+// Graphite — PWA icon generator (no external dependencies)
 //
 // Draws the neo-brutalist "C" mark (design.md §1, §5) as flat
 // solid-color rects and encodes it as RGBA PNGs using only

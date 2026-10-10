@@ -1,7 +1,7 @@
 {
-  "name": "Catalyst — Notes to Knowledge",
-  "short_name": "Catalyst",
-  "description": "Turns your raw local notes into an interconnected knowledge graph and active-recall flashcards.",
+  "name": "Graphite — From raw thoughts to connected graphs.",
+  "short_name": "Graphite",
+  "description": "From raw thoughts to connected graphs.",
   "id": "/dashboard",
   "start_url": "/dashboard",
   "scope": "/",

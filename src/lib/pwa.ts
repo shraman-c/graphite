@@ -8,10 +8,10 @@
 // ============================================================
 
 /** Set once a student finishes their first review session. */
-export const REVIEW_COMPLETED_KEY = 'catalyst-review-completed';
+export const REVIEW_COMPLETED_KEY = 'graphite-review-completed';
 
 /** Set when the user dismisses the one-time dashboard install card. */
-export const INSTALL_DISMISSED_KEY = 'catalyst-install-dismissed';
+export const INSTALL_DISMISSED_KEY = 'graphite-install-dismissed';
 
 /** True when the app is already running as an installed PWA. */
 export function isStandalone(): boolean {

@@ -3,8 +3,8 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Developers | Catalyst',
-  description: 'About the developers and license for Catalyst.',
+  title: 'Developers | Graphite',
+  description: 'About the developers and license for Graphite.',
 };
 
 export default function DevPage() {
@@ -13,7 +13,7 @@ export default function DevPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <nav className="nav-bar">
-        <Link href="/" className="nav-logo">Catalyst</Link>
+        <Link href="/" className="nav-logo">GRAPHITE</Link>
       </nav>
 
       <main className="flex-1 p-6 flex flex-col items-center">
