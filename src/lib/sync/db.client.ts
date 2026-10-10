@@ -21,12 +21,12 @@ export interface SyncQueueItem {
   created_at: string;
 }
 
-export class CatalystDB extends Dexie {
+export class GraphiteDB extends Dexie {
   cards!: Table<LocalFlashcard, string>;
   syncQueue!: Table<SyncQueueItem, number>;
 
   constructor() {
-    super('CatalystLocalDB');
+    super('GraphiteLocalDB');
     this.version(1).stores({
       cards: 'id, subject_id, status, next_review_at',
       syncQueue: '++id, action, created_at'
@@ -34,4 +34,5 @@ export class CatalystDB extends Dexie {
   }
 }
 
-export const db = new CatalystDB();
+export const db = new GraphiteDB();
+export { GraphiteDB as CatalystDB };

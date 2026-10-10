@@ -1,7 +1,7 @@
 {
-  "name": "catalyst-watcher",
+  "name": "graphite-watcher",
   "version": "1.0.0",
-  "description": "Local file watcher for Catalyst — monitors folders and syncs note changes to the dashboard automatically.",
+  "description": "Local file watcher for Graphite — monitors folders and syncs note changes to the dashboard automatically.",
   "private": true,
   "type": "commonjs",
   "main": "index.js",

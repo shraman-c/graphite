@@ -19,7 +19,7 @@ export interface NoteDraft {
   savedAt: number;
 }
 
-const DRAFT_PREFIX = 'catalyst-note-draft:';
+const DRAFT_PREFIX = 'graphite-note-draft:';
 
 function draftKey(subjectId: string): string {
   return `${DRAFT_PREFIX}${subjectId}`;

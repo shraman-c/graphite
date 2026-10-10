@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Settings - Catalyst',
+  title: 'Settings - Graphite',
   description: 'Manage your account settings, appearance, and synchronization preferences.',
 };
 

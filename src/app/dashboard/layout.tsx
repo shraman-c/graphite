@@ -7,8 +7,8 @@ import ConnectionStatus from '@/components/ConnectionStatus';
 import MobileNav from '@/components/MobileNav';
 
 export const metadata: Metadata = {
-  title: 'Dashboard — Catalyst',
-  description: 'Manage your knowledge base, notes, and spaced repetition flashcards in your Catalyst dashboard.',
+  title: 'Dashboard — Graphite',
+  description: 'Manage your knowledge base, notes, and spaced repetition flashcards in your Graphite dashboard.',
 };
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -22,7 +22,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       {/* Top navigation */}
       <nav className="nav-bar" style={{ position: 'sticky', top: 0, zIndex: 100, backgroundColor: 'var(--base)' }}>
         <Link href="/dashboard" className="nav-logo" id="nav-logo">
-          CATALYST
+          GRAPHITE
         </Link>
 
         <div className="flex gap-4 items-center hide-on-mobile" style={{ marginLeft: '40px' }} id="nav-links-desktop">

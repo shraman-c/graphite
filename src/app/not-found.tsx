@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Page Not Found - Catalyst',
+  title: 'Page Not Found - Graphite',
   description: 'The page you are looking for does not exist.',
 };
 

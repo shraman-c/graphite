@@ -1,6 +1,6 @@
-# Catalyst - Turn Notes Into Knowledge
+# Graphite - From raw thoughts to connected graphs.
 
-Catalyst is an open-source web application designed to automatically turn raw, local markdown notes into an interconnected knowledge graph and active-recall flashcards. 
+Graphite is an open-source web application designed to automatically turn raw, local markdown notes into an interconnected knowledge graph and active-recall flashcards. 
 It supports writing in any editor and syncs your local folder to a powerful spaced repetition system. 
 
 ## Core Features

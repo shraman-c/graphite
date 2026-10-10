@@ -1,7 +1,7 @@
 {
-  "name": "catalyst",
+  "name": "graphite",
   "version": "1.0.0",
-  "description": "Local-to-Cloud Note Catalyst — turns raw notes into knowledge graphs and flashcards automatically",
+  "description": "Graphite — From raw thoughts to connected graphs.",
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",

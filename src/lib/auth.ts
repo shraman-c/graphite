@@ -31,17 +31,17 @@ function getVerifySecrets(): Uint8Array[] {
   return secrets;
 }
 
-export const COOKIE_NAME_EXPORT = 'catalyst_session';
+export const COOKIE_NAME_EXPORT = 'graphite_session';
 
 // Use a global flag so HMR doesn't reset the flag mid-request,
 // but a real server restart (new process) always runs migrations.
 declare global {
   // eslint-disable-next-line no-var
-  var __catalystSchemaInit: boolean | undefined;
+  var __graphiteSchemaInit: boolean | undefined;
 }
 
 export async function ensureSchema() {
-  if (global.__catalystSchemaInit) return;
+  if (global.__graphiteSchemaInit) return;
   // One cheap catalog probe instead of the ~30-statement initializeSchema()
   // DDL sweep. On serverless (Vercel) every cold instance used to run the full
   // DDL on its first request — multi-second latency on login AND on every data
@@ -56,11 +56,11 @@ export async function ensureSchema() {
     // Existing DB: run only the additive column backfills (Part 3), never the
     // full DDL sweep — keeps the cold-start win while self-migrating.
     await ensureDeviceMigrations();
-    global.__catalystSchemaInit = true;
+    global.__graphiteSchemaInit = true;
     return;
   }
   await initializeSchema();
-  global.__catalystSchemaInit = true;
+  global.__graphiteSchemaInit = true;
 }
 
 const SESSION_DAYS = 30;
@@ -192,7 +192,7 @@ export async function revokeAllSessions(userId: string): Promise<void> {
 
 export async function getSession(): Promise<SessionUser | null> {
   const cookieStore = await cookies();
-  const token = cookieStore.get(COOKIE_NAME_EXPORT)?.value;
+  const token = cookieStore.get(COOKIE_NAME_EXPORT)?.value || cookieStore.get('catalyst_session')?.value;
   if (!token) return null;
   const user = await verifySession(token);
   if (!user) return null;
@@ -207,7 +207,7 @@ export async function getSession(): Promise<SessionUser | null> {
  */
 export async function getSessionJti(): Promise<string | null> {
   const cookieStore = await cookies();
-  const token = cookieStore.get(COOKIE_NAME_EXPORT)?.value;
+  const token = cookieStore.get(COOKIE_NAME_EXPORT)?.value || cookieStore.get('catalyst_session')?.value;
   if (!token) return null;
   for (const secret of getVerifySecrets()) {
     try {

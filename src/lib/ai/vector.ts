@@ -14,7 +14,7 @@ import { Pinecone } from '@pinecone-database/pinecone';
 export const EMBED_MODEL = 'llama-text-embed-v2'; // 1024-dim, Pinecone-hosted inference
 export const EMBED_DIM = 1024;
 
-const DEFAULT_INDEX = 'catalyst';
+const DEFAULT_INDEX = 'graphite';
 const PINECONE_CLOUD = process.env.PINECONE_CLOUD || 'aws';
 const PINECONE_REGION = process.env.PINECONE_REGION || 'us-east-1';
 
@@ -34,8 +34,10 @@ function getPinecone(): Pinecone {
   return _pc;
 }
 
+let _activePineconeIndex: string | null = null;
+
 function indexName(): string {
-  return process.env.PINECONE_INDEX || DEFAULT_INDEX;
+  return _activePineconeIndex || process.env.PINECONE_INDEX || DEFAULT_INDEX;
 }
 
 function sleep(ms: number): Promise<void> {
@@ -50,9 +52,22 @@ async function ensureIndexReady(): Promise<void> {
   if (!_indexReady) {
     _indexReady = (async () => {
       const pc = getPinecone();
-      const name = indexName();
       const existing = await pc.listIndexes();
-      const exists = existing.indexes?.some((i) => i.name === name);
+      const names = existing.indexes?.map((i) => i.name) || [];
+
+      let name = process.env.PINECONE_INDEX;
+      if (!name) {
+        if (names.includes('graphite')) {
+          name = 'graphite';
+        } else if (names.includes('catalyst')) {
+          name = 'catalyst';
+        } else {
+          name = DEFAULT_INDEX;
+        }
+      }
+      _activePineconeIndex = name;
+
+      const exists = names.includes(name);
 
       if (!exists) {
         await pc.createIndex({

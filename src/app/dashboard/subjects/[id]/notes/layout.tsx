@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Notes - Catalyst',
+  title: 'Notes - Graphite',
   description: 'View and manage all your raw markdown notes synced for this subject.',
 };
 

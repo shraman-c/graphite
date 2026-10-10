@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Knowledge Graph - Catalyst',
+  title: 'Knowledge Graph - Graphite',
   description: 'Visualize the connections between your notes through an interactive knowledge graph.',
 };
 
